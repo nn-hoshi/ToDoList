@@ -207,12 +207,15 @@ document.getElementById('taskInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleAddTask();
 });
 
-document.querySelectorAll('.filters button').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    state.filter = btn.dataset.filter;
-    render();
+const bindFilterEvents = () => {
+  document.querySelectorAll('.filters button').forEach((btn) => {
+    btn.onclick = () => {
+      state.filter = btn.dataset.filter;
+      render();
+      bindFilterEvents();
+    };
   });
-});
+};
 
 // INIT
 render();
