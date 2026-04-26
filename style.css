@@ -1,54 +1,152 @@
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
     background: #f4f4f4;
 }
 
+/* ===================== */
+/* PROGRESS BAR */
+/* ===================== */
+.progress-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 320px;
+    height: 18px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: green;
+    transition: width 0.3s ease;
+}
+
+/* ===================== */
+/* STATS BOX */
+/* ===================== */
+.stats {
+    position: fixed;
+    top: 50px;
+    left: 20px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ===================== */
+/* MAIN CONTAINER */
+/* ===================== */
 .container {
-    width: 400px;
-    margin: 50px auto;
+    width: 420px;
+    margin: 100px auto;
     background: white;
     padding: 20px;
     border-radius: 10px;
 }
 
-h1 {
-    text-align: center;
-}
-
+/* ===================== */
+/* INPUT BLOCK */
+/* ===================== */
 .input-block {
     display: flex;
     gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 input {
     flex: 1;
     padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
 
+/* ===================== */
+/* BUTTONS */
+/* ===================== */
 button {
     padding: 8px 12px;
     cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    transition: 0.2s;
+    background: #eee;
 }
 
+/* разделяем кнопки между собой */
+button + button {
+    margin-left: 6px;
+}
+
+.confirm-btn {
+    width: 100%;
+    margin: 10px 0;
+    background: #333;
+    color: white;
+}
+
+/* ===================== */
+/* FILTERS */
+/* ===================== */
 .filters {
-    margin: 15px 0;
+    margin: 10px 0;
     display: flex;
     justify-content: space-between;
+    gap: 6px;
 }
 
+.filters button {
+    flex: 1;
+}
+
+/* ===================== */
+/* TASK LIST */
+/* ===================== */
 ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 li {
     display: flex;
     justify-content: space-between;
-    padding: 8px;
+    align-items: center;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
+/* ===================== */
+/* STATUS STYLES */
+/* ===================== */
 .completed {
+    color: green;
+    font-weight: bold;
+}
+
+.rejected {
+    color: red;
     text-decoration: line-through;
-    color: gray;
+    opacity: 0.7;
+}
+
+/* ===================== */
+/* RESULT MODAL */
+/* ===================== */
+.result-modal {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    text-align: center;
 }
