@@ -24,7 +24,7 @@
 
   <!-- ВВОД ЗАДАЧ -->
   <div class="input-block" id="inputBlock">
-    <input type="text" id="taskInput" placeholder="Введите задачу...">
+    <label for="taskInput"></label><input type="text" id="taskInput" placeholder="Введите задачу...">
     <button id="addBtn">Добавить</button>
   </div>
 
@@ -32,6 +32,9 @@
   <button id="confirmBtn" class="confirm-btn">
     Подтвердить список
   </button>
+
+  <!-- ОШИБКА -->
+  <p id="errorMsg" class="error-msg"></p>
 
   <!-- ФИЛЬТРЫ (ПОСЛЕ CONFIRM) -->
   <div class="filters" id="filters" style="display:none;">
