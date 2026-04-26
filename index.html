@@ -4,50 +4,90 @@
   <meta charset="UTF-8">
   <title>ToDo FP Workflow</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="intro.css">
 </head>
 <body>
 
-<!-- ПРОГРЕСС -->
-<div class="progress-container">
-  <div class="progress-bar" id="progressBar"></div>
+<!-- START SCREEN -->
+<div id="titleScreen" class="screen">
+  <h1 class="title">ToDo List</h1>
+  <button id="goIntroBtn" class="start-btn">START</button>
 </div>
 
-<!-- СТАТИСТИКА -->
-<div class="stats" id="statsBox"></div>
+<!-- INTRO SCREEN -->
+<div id="introScreen" class="screen" style="display:none;">
 
-<!-- ИТОГОВОЕ ОКНО -->
-<div class="result-modal" id="resultModal" style="display:none;"></div>
+  <div id="wrapper">
+    <div id="reader" data-status="">
 
-<!-- КОНТЕЙНЕР -->
-<div class="container">
-  <h1>Список задач</h1>
+      <div class="top">
+        <div class="screen-ui">
+          <div id="message"></div>
+        </div>
 
-  <!-- ВВОД ЗАДАЧ -->
-  <div class="input-block" id="inputBlock">
-    <label for="taskInput"></label><input type="text" id="taskInput" placeholder="Введите задачу...">
-    <button id="addBtn">Добавить</button>
+        <div class="lights">
+          <div class="light red"></div>
+          <div class="light green"></div>
+        </div>
+      </div>
+
+      <div id="card">
+        <div id="photo"></div>
+      </div>
+
+      <div class="bottom"></div>
+
+    </div>
   </div>
 
-  <!-- КНОПКА ПОДТВЕРЖДЕНИЯ -->
-  <button id="confirmBtn" class="confirm-btn">
-    Подтвердить список
-  </button>
-
-  <!-- ОШИБКА -->
-  <p id="errorMsg" class="error-msg"></p>
-
-  <!-- ФИЛЬТРЫ (ПОСЛЕ CONFIRM) -->
-  <div class="filters" id="filters" style="display:none;">
-    <button data-filter="all">Все</button>
-    <button data-filter="active">Активные</button>
-    <button data-filter="completed">Выполненные</button>
-    <button data-filter="rejected">Отклонённые</button>
-  </div>
-
-  <!-- СПИСОК ЗАДАЧ -->
-  <ul id="taskList"></ul>
 </div>
 
+
+
+<!-- TODO APP -->
+<div id="appScreen" style="display:none;">
+
+  <!-- ПРОГРЕСС -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- СТАТИСТИКА -->
+  <div class="stats" id="statsBox"></div>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <div class="result-modal" id="resultModal" style="display:none;"></div>
+
+  <div class="container">
+
+    <h1>Список задач</h1>
+
+    <div class="input-block" id="inputBlock">
+      <input type="text" id="taskInput" placeholder="Введите задачу...">
+      <button id="addBtn">Добавить</button>
+    </div>
+
+    <button id="confirmBtn" class="confirm-btn">
+      Подтвердить список
+    </button>
+
+    <p id="errorMsg" class="error-msg"></p>
+
+    <div class="filters" id="filters" style="display:none;">
+      <button data-filter="all">Все</button>
+      <button data-filter="active">Активные</button>
+      <button data-filter="completed">Выполненные</button>
+      <button data-filter="rejected">Отклонённые</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="intro.js"></script>
 <script src="main.js"></script>
+
 </body>
 </html>
