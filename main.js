@@ -82,8 +82,16 @@ const checkFinished = () => {
     (t) => t.status === 'completed' || t.status === 'rejected',
   );
 
-  if (allDone && state.tasks.length > 0) {
+  if (allDone && state.tasks.length > 0 && !state.finished) {
     state.finished = true;
+
+    // ❌ УБИРАЕМ ВЕСЬ БЛОК УПРАВЛЕНИЯ ЗАДАЧАМИ
+    document.querySelector('.container').style.display = 'none';
+
+    // ❌ УБИРАЕМ ПРОГРЕСС И СТАТИСТИКУ
+    document.querySelector('.progress-container').style.display = 'none';
+    document.querySelector('.stats').style.display = 'none';
+
     showResult();
   }
 };
@@ -174,7 +182,9 @@ const render = () => {
     list.appendChild(li);
   });
 
-  updateProgress();
+  if (state.confirmed) {
+    updateProgress();
+  }
   updateStats();
   checkFinished();
 };
@@ -231,6 +241,12 @@ document.getElementById('confirmBtn').addEventListener('click', () => {
   document.getElementById('confirmBtn').style.display = 'none';
   document.getElementById('filters').style.display = 'flex';
   document.getElementById('inputBlock').style.display = 'none';
+
+  // 🔥 ПОКАЗЫВАЕМ ПРОГРЕСС ТОЛЬКО ПОСЛЕ CONFIRM
+  document.querySelector('.progress-container').style.display = 'block';
+  document.querySelector('.stats').style.display = 'block';
+
+  document.querySelector('.container').classList.add('left-mode');
 
   render();
 });
