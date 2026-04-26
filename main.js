@@ -97,11 +97,45 @@ const showResult = () => {
   const { total, completed, percent } = getStats(state.tasks);
 
   modal.style.display = 'block';
+
   modal.innerHTML = `
-        🎉 Все задачи завершены!<br><br>
+        Задачи завершены!<br><br>
         Выполнено: ${completed} / ${total}<br>
-        Прогресс: ${percent}%
+        Прогресс: ${percent}%<br><br>
+
+        <button id="finishDayBtn" class="finish-btn">
+            Закончить день
+        </button>
     `;
+
+  document.getElementById('finishDayBtn').addEventListener('click', finishDay);
+};
+
+const finishDay = () => {
+  document.querySelector('.container').style.display = 'none';
+  document.querySelector('.progress-container').style.display = 'none';
+  document.querySelector('.stats').style.display = 'none';
+
+  const modal = document.getElementById('resultModal');
+
+  modal.innerHTML = `
+      <div class="finish-message">
+          День завершён. Хорошая работа!
+      </div>
+
+      <div class="finish-actions">
+          <button id="exitBtn" class="exit-btn">
+              Выйти
+          </button>
+      </div>
+  `;
+
+  document.getElementById('exitBtn').addEventListener('click', exitApp);
+};
+
+const exitApp = () => {
+  // пробуем закрыть вкладку (сработает не всегда)
+  window.close();
 };
 
 // =====================
@@ -183,15 +217,19 @@ const handleReject = (id) => {
 // CONFIRM LIST
 // =====================
 document.getElementById('confirmBtn').addEventListener('click', () => {
+  const error = document.getElementById('errorMsg');
+
+  if (state.tasks.length === 0) {
+    error.textContent = 'Список задач пуст! Добавьте хотя бы одну задачу.';
+    return;
+  }
+
+  error.textContent = '';
+
   state.confirmed = true;
 
-  // скрываем кнопку подтверждения
   document.getElementById('confirmBtn').style.display = 'none';
-
-  // показываем фильтры
   document.getElementById('filters').style.display = 'flex';
-
-  // СКРЫВАЕМ ВВОД ЗАДАЧ
   document.getElementById('inputBlock').style.display = 'none';
 
   render();
