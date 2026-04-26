@@ -230,19 +230,17 @@ document.getElementById('confirmBtn').addEventListener('click', () => {
   const error = document.getElementById('errorMsg');
 
   if (state.tasks.length === 0) {
-    error.textContent = 'Список задач пуст! Добавьте хотя бы одну задачу.';
+    error.textContent = 'Список задач пуст!';
     return;
   }
 
   error.textContent = '';
-
   state.confirmed = true;
 
   document.getElementById('confirmBtn').style.display = 'none';
   document.getElementById('filters').style.display = 'flex';
   document.getElementById('inputBlock').style.display = 'none';
 
-  // 🔥 ПОКАЗЫВАЕМ ПРОГРЕСС ТОЛЬКО ПОСЛЕ CONFIRM
   document.querySelector('.progress-container').style.display = 'block';
   document.querySelector('.stats').style.display = 'block';
 
