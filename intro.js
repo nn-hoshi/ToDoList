@@ -1,23 +1,31 @@
 const card = document.getElementById('card');
 const reader = document.getElementById('reader');
+const cardOverlay = document.getElementById('cardOverlay');
+
+const titleScreen = document.getElementById('titleScreen');
+const appScreen = document.getElementById('appScreen');
+const goIntroBtn = document.getElementById('goIntroBtn');
 
 let active = false;
 let initialX;
 let timeStart, timeEnd;
 
-
-const titleScreen = document.getElementById('titleScreen');
-const introScreen = document.getElementById('introScreen');
-const appScreen = document.getElementById('appScreen');
-
-const goIntroBtn = document.getElementById('goIntroBtn');
-
+// =====================
+// START BUTTON
+// =====================
 goIntroBtn.addEventListener('click', () => {
-  titleScreen.style.display = 'none';
-  introScreen.style.display = 'flex';
+  cardOverlay.classList.add('active');
+
+  // лучше не display:none сразу
+  setTimeout(() => {
+    titleScreen.style.opacity = '0';
+    titleScreen.style.pointerEvents = 'none';
+  }, 150);
 });
 
-
+// =====================
+// SOUND
+// =====================
 const soundAccepted = new Audio(
   'https://thomaspark.co/projects/among-us-card-swipe/audio/CardAccepted.mp3',
 );
@@ -38,44 +46,32 @@ document.addEventListener('touchmove', drag);
 document.addEventListener('touchend', dragEnd);
 
 // =====================
-// START DRAG
+// DRAG START
 // =====================
 function dragStart(e) {
-  if (e.target !== card) return;
+  if (!cardOverlay.classList.contains('active')) return;
+  if (!card.contains(e.target)) return;
 
   active = true;
   timeStart = performance.now();
 
-  if (e.type === 'touchstart') {
-    initialX = e.touches[0].clientX;
-  } else {
-    initialX = e.clientX;
-  }
+  initialX = e.touches ? e.touches[0].clientX : e.clientX;
 
   card.classList.remove('slide');
 }
 
-// =====================
-// DRAG MOVE
-// =====================
 function drag(e) {
   if (!active) return;
 
-  e.preventDefault();
+  let clientX = e.touches ? e.touches[0].clientX : e.clientX;
 
-  let x;
-
-  if (e.type === 'touchmove') {
-    x = e.touches[0].clientX - initialX;
-  } else {
-    x = e.clientX - initialX;
-  }
+  let x = clientX - initialX;
 
   setTranslate(x);
 }
 
 // =====================
-// END DRAG
+// DRAG END
 // =====================
 function dragEnd(e) {
   if (!active) return;
@@ -83,20 +79,15 @@ function dragEnd(e) {
   active = false;
   timeEnd = performance.now();
 
-  let x;
+  let x = e.changedTouches
+    ? e.changedTouches[0].clientX - initialX
+    : e.clientX - initialX;
 
-  if (e.type === 'touchend') {
-    x = 0;
-  } else {
-    x = 0;
-  }
-
-  let status = evaluateSwipe(e);
+  let status = evaluateSwipe(x);
 
   card.classList.add('slide');
   setTranslate(0);
   setStatus(status);
-  playSound(status);
 }
 
 // =====================
@@ -111,18 +102,14 @@ function setTranslate(x) {
 }
 
 // =====================
-// CHECK RESULT
+// CHECK
 // =====================
-function evaluateSwipe(e) {
-  let x;
-
-  if (e.type === 'touchend') {
-    x = 0;
-  } else {
-    x = 0;
-  }
-
+function evaluateSwipe(x) {
   let duration = timeEnd - timeStart;
+
+  if (x < reader.offsetWidth * 0.7) {
+    return 'invalid';
+  }
 
   if (duration > 700) return 'slow';
   if (duration < 400) return 'fast';
@@ -140,7 +127,8 @@ function setStatus(status) {
 
   if (status === 'valid') {
     setTimeout(() => {
-      introScreen.style.display = 'none';
+      cardOverlay.classList.remove('active');
+
       appScreen.style.display = 'block';
     }, 1000);
   }

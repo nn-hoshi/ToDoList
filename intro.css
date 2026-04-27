@@ -1,23 +1,69 @@
 /* =========================
-   INTRO SCREEN (изоляция)
+   TITLE SCREEN (центрирование)
 ========================= */
 
-#introScreen {
+#titleScreen {
     position: fixed;
     inset: 0;
-    background-color: #3d4a4a;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+
+    background-color: #0b1220;
+    z-index: 1;
+}
+
+.title {
+    color: white;
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+
+.start-btn {
+    padding: 15px 40px;
+    font-size: 20px;
+
+    background: #3dd022;
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
 }
 
 /* =========================
-   WRAPPER
+   CARD OVERLAY (АНИМАЦИЯ ВЫЕЗДА)
 ========================= */
 
-#introScreen #wrapper {
+#cardOverlay {
+    position: fixed;
+    left: 50%;
+    top: 100%;
+
+    transform: translateX(-50%);
+
+    transition: top 0.7s ease;
+
+    z-index: 9999;
+
+    pointer-events: auto;
+}
+
+#cardOverlay.active {
+    top: 50%;
+}
+
+/* =========================
+   WRAPPER (сама карта)
+========================= */
+
+#wrapper {
     position: relative;
     width: 400px;
     height: 250px;
@@ -30,150 +76,103 @@
    READER
 ========================= */
 
-#introScreen #reader {
+#reader {
     width: 100%;
     height: 400px;
 }
 
-/* =========================
-   TOP / BOTTOM
-========================= */
-
-#introScreen #reader .top {
+/* TOP / BOTTOM */
+#reader .top {
     position: relative;
     width: 100%;
     height: 125px;
-    z-index: 100;
 
     background-color: #adadad;
     border: 4px solid #000;
-    width: calc(100% + 8px);
+
     padding: 16px;
     margin: -4px 0 0 -3px;
 }
 
-#introScreen #reader .bottom {
+#reader .bottom {
     width: calc(100% + 8px);
     height: 75px;
+
     margin: 10px 0 0 -4px;
 
     background-color: #adadad;
     border: 4px solid #000;
 
     border-top-left-radius: 30px;
-
     box-shadow:
-            inset -6px -6px #555555,
-            inset 6px 6px #555555,
+            inset -6px -6px #555,
+            inset 6px 6px #555,
             0 30px rgba(0, 0, 0, 0.1);
 }
 
 /* =========================
-   DECOR (как в оригинале)
+   SCREEN
 ========================= */
 
-#introScreen #reader .top:before {
-    content: "";
-    position: absolute;
-    left: 20px;
-    bottom: 12px;
-    width: 140px;
-    height: 10px;
-    background-color: #000;
-}
-
-#introScreen #reader .top:after {
-    content: "";
-    position: absolute;
-    left: 150px;
-    bottom: 12px;
-
-    border-bottom: 30px solid #000;
-    border-right: 60px solid transparent;
-}
-
-/* =========================
-   SCREEN TEXT
-========================= */
-
-#introScreen .screen-ui {
+.screen-ui {
     border: 4px solid #000;
     padding: 4px;
     margin: 0 12px;
     background-color: #164a38;
 }
 
-#introScreen #message {
+#message {
     font-family: monospace;
     font-size: 20px;
     color: #c5d6d0;
     text-transform: uppercase;
 }
 
-/* TEXT STATES */
-#introScreen #message:after {
+#message:after {
     content: "Swipe card";
 }
 
-#introScreen [data-status="invalid"] #message:after {
-    content: "Bad read";
-}
-
-#introScreen [data-status="slow"] #message:after {
-    content: "Too slow";
-}
-
-#introScreen [data-status="fast"] #message:after {
-    content: "Too fast";
-}
-
-#introScreen [data-status="valid"] #message:after {
-    content: "Accepted";
-}
+[data-status="invalid"] #message:after { content: "Bad read"; }
+[data-status="slow"] #message:after { content: "Too slow"; }
+[data-status="fast"] #message:after { content: "Too fast"; }
+[data-status="valid"] #message:after { content: "Accepted"; }
 
 /* =========================
    LIGHTS
 ========================= */
 
-#introScreen .lights {
+.lights {
     position: absolute;
     right: 10px;
     bottom: 10px;
 }
 
-#introScreen .light {
+.light {
     display: inline-block;
     width: 25px;
     height: 25px;
 
     border: 4px solid #000;
     border-radius: 50%;
-    box-shadow: 0 4px #555555;
-
+    box-shadow: 0 4px #555;
     filter: saturate(0.6) brightness(0.7);
 }
 
-#introScreen .red {
-    background-color: #f52818;
-}
+.red { background: #f52818; }
+.green { background: #3dd022; }
 
-#introScreen .green {
-    background-color: #3dd022;
-}
-
-/* ACTIVE LIGHT */
-#introScreen [data-status="valid"] .green,
-#introScreen [data-status="invalid"] .red,
-#introScreen [data-status="slow"] .red,
-#introScreen [data-status="fast"] .red {
+[data-status="valid"] .green,
+[data-status="invalid"] .red,
+[data-status="slow"] .red,
+[data-status="fast"] .red {
     filter: none;
 }
 
 /* =========================
-   CARD (ВАЖНО: слева!)
+   CARD
 ========================= */
 
-#introScreen #card {
+#card {
     display: flex;
     align-items: center;
 
@@ -183,62 +182,35 @@
     width: 250px;
     height: 150px;
 
-    transform: translateX(-125px); /* ← КЛЮЧЕВОЕ */
+    transform: translateX(-125px);
 
-    background-color: #dfdfdf;
+    background: #dfdfdf;
     border: 2px solid #7f7f7f;
     border-radius: 15px;
+
+    will-change: transform;
 
     cursor: grab;
 }
 
-/* smooth return */
-#introScreen #card.slide {
+#card.slide {
     transition: transform 1s;
 }
 
-/* =========================
-   PHOTO
-========================= */
-
-#introScreen #photo {
-    position: relative;
+/* PHOTO */
+#photo {
     width: 75px;
     height: 100px;
 
-    background-color: #aeaeae;
+    background: #aeaeae;
     border: 2px solid #292929;
 
     margin-left: 16px;
+    position: relative;
     overflow: hidden;
 }
 
-#introScreen #photo:before {
-    content: "";
-    position: absolute;
-
-    right: 0;
-    bottom: 0;
-
-    width: 55px;
-    height: 80px;
-
-    background-color: #646464;
-    border: 2px solid #434343;
-
-    border-bottom-width: 0;
-}
-
-#introScreen #photo:after {
-    content: "";
-    position: absolute;
-
-    right: 30px;
-    bottom: 45px;
-
-    width: 30px;
-    height: 15px;
-
-    background-color: #a6a6a6;
-    border: 2px solid #434343;
+body {
+    margin: 0;
+    background: #0b1220;
 }
