@@ -1,5 +1,4 @@
 const card = document.getElementById('card');
-const reader = document.getElementById('reader');
 const cardOverlay = document.getElementById('cardOverlay');
 
 const titleScreen = document.getElementById('titleScreen');
@@ -14,13 +13,9 @@ let timeStart, timeEnd;
 // START BUTTON
 // =====================
 goIntroBtn.addEventListener('click', () => {
-  cardOverlay.classList.add('active');
+  titleScreen.style.display = 'none';
 
-  // лучше не display:none сразу
-  setTimeout(() => {
-    titleScreen.style.opacity = '0';
-    titleScreen.style.pointerEvents = 'none';
-  }, 150);
+  cardOverlay.classList.add('active');
 });
 
 // =====================
@@ -45,6 +40,8 @@ document.addEventListener('touchstart', dragStart);
 document.addEventListener('touchmove', drag);
 document.addEventListener('touchend', dragEnd);
 
+document.querySelector('.terminal').dataset.status = status;
+
 // =====================
 // DRAG START
 // =====================
@@ -55,17 +52,24 @@ function dragStart(e) {
   active = true;
   timeStart = performance.now();
 
-  initialX = e.touches ? e.touches[0].clientX : e.clientX;
+  const rect = card.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+  initialX = clientX;
+  startOffset = rect.left;
 
   card.classList.remove('slide');
 }
 
+// =====================
+// DRAG MOVE
+// =====================
 function drag(e) {
   if (!active) return;
 
-  let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
 
-  let x = clientX - initialX;
+  let x = startOffset + (clientX - initialX);
 
   setTranslate(x);
 }
@@ -94,20 +98,27 @@ function dragEnd(e) {
 // MOVE CARD
 // =====================
 function setTranslate(x) {
-  if (x < 0) x = 0;
-  if (x > reader.offsetWidth) x = reader.offsetWidth;
+  const terminal = document.querySelector('.terminal');
+  const rect = terminal.getBoundingClientRect();
 
-  x -= card.offsetWidth / 2;
-  card.style.transform = `translateX(${x}px)`;
+  const max = rect.width;
+
+  if (x < rect.left) x = rect.left;
+  if (x > rect.left + max) x = rect.left + max;
+
+  card.style.transform = `translateX(${x - rect.left}px)`;
 }
 
 // =====================
-// CHECK
+// CHECK RESULT
 // =====================
 function evaluateSwipe(x) {
   let duration = timeEnd - timeStart;
 
-  if (x < reader.offsetWidth * 0.7) {
+  // проверка длины свайпа (нормализуем под terminal)
+  const terminal = document.querySelector('.terminal');
+
+  if (x < terminal.offsetWidth * 0.7) {
     return 'invalid';
   }
 
@@ -121,14 +132,15 @@ function evaluateSwipe(x) {
 // STATUS
 // =====================
 function setStatus(status) {
-  reader.dataset.status = status;
+  const terminal = document.querySelector('.terminal');
+  terminal.dataset.status = status;
+  document.querySelector('.terminal').dataset.status = status;
 
   playSound(status);
 
   if (status === 'valid') {
     setTimeout(() => {
       cardOverlay.classList.remove('active');
-
       appScreen.style.display = 'block';
     }, 1000);
   }
