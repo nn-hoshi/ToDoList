@@ -2,7 +2,6 @@
    TITLE SCREEN
 ========================= */
 
-
 #titleScreen {
     transform: translateY(-100px);
     position: fixed;
@@ -17,17 +16,30 @@
     z-index: 1;
 }
 
+.logo {
+    opacity: 0;
+    animation: logoFloat 2s ease-in-out infinite, fadeIn 0.6s forwards;
+
+    margin-bottom: -60px; /* 👈 поднимает/раздвигает от title */
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
 .title {
     font-family: 'Amatic SC', cursive;
     color: #fff;
-    font-size: 150px;
+    font-size: 100px;
 }
 
 #goIntroBtn {
-    width: 200px;      /* подгони под свою картинку */
+    width: 192px;      /* подгони под свою картинку */
     cursor: pointer;
     transition: transform 0.2s ease;
     user-select: none;
+
+    margin-top: 70px;
 }
 
 #goIntroBtn:hover {
@@ -140,7 +152,32 @@ img {
 body {
     margin: 0;
     background: #000;
+    overflow: hidden;
 }
+
+
+.stars {
+    position: fixed;
+    inset: 0;   /* 100% экрана */
+
+    background-image: url("assets/stars.png");
+    background-size: 1176px 392px;
+
+    z-index: 100;
+    pointer-events: none;
+
+    animation: starsMove 20s linear infinite;
+}
+
+@keyframes starsMove {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(-120px, -80px);
+    }
+}
+
 
 #message {
     font-family: 'DSEG14 Classic', monospace;
