@@ -13,7 +13,7 @@
     align-items: center;
 
     background-color: #000000;
-    z-index: 1;
+    z-index: 0;
 }
 
 .logo {
@@ -163,7 +163,7 @@ body {
     background-image: url("assets/stars.png");
     background-size: 1176px 392px;
 
-    z-index: 100;
+    z-index: 5;
     pointer-events: none;
 
     animation: starsMove 20s linear infinite;

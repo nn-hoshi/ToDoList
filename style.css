@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background: #000;
+    font-family: Arial, sans-serif;
 }
 
 /* ===================== */
@@ -10,56 +11,87 @@ body {
     position: fixed;
     top: 20px;
     left: 20px;
-    width: 320px;
-    height: 18px;
-    background: #ddd;
-    border-radius: 10px;
-    overflow: hidden;
 
-    display: none; /* ❗ скрыт до confirm */
+    width: 802px;
+    height: 74px;
+
+    display: none;
+
+    position: fixed;
+
+    overflow: hidden; /* 👈 важно */
 }
 
-.progress-bar {
+.progress-bg {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
     height: 100%;
+
+    z-index: 30;
+}
+
+.progress-fill {
+    position: absolute;
+    left: 21px;
+    top: 21px;
+    height: 45%;
+
     width: 0;
-    background: green;
+
+    background: #37dd37; /* 👈 светлее версия */
+    z-index: 31;
+
     transition: width 0.3s ease;
 }
 
-/* ===================== */
-/* СТАТИСТИКА (СКРЫТА ПО УМОЛЧАНИЮ) */
-/* ===================== */
-.stats {
-    position: fixed;
-    top: 50px;
-    left: 20px;
-    background: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 14px;
+.progress-text {
+    position: absolute;
+    top: 52%;
+    left: 25%;
 
-    display: none; /* ❗ скрыта до confirm */
+    transform: translate(-50%, -50%);
+
+    z-index: 32;
+
+    font-family: Arial, sans-serif;
+    font-size: 25px;
+
+    color: white;
+
+    text-shadow:
+            -2px -2px 0 #000,
+            2px -2px 0 #000,
+            -2px  2px 0 #000,
+            2px  2px 0 #000;
+
+    pointer-events: none;
 }
-
-/* ===================== */
-/* ЛЕВЫЙ РЕЖИМ ПОСЛЕ CONFIRM */
-/* ===================== */
-.left-mode {
-    position: fixed;
-    top: 10px;
-    left: 20px;
-    margin: 0;
-}
-
 /* ===================== */
 /* КОНТЕЙНЕР */
 /* ===================== */
 .container {
     width: 420px;
     margin: 100px auto;
-    background: white;
     padding: 20px;
+
+    background: white;
     border-radius: 10px;
+
+}
+
+.container.left-mode {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+
+    margin: auto;
+
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
 }
 
 /* ===================== */
@@ -140,21 +172,53 @@ li {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+}
+
+li span {
+    color: black;
+}
+
+.container.left-mode li span {
+    font-size: 23px;
+    letter-spacing: 1px;
+
+    line-height: 1.1; /* по умолчанию ~1.4 */
+    color: white;
+
+    text-shadow:
+            -2px -2px 0 #000,
+            2px -2px 0 #000,
+            -2px  2px 0 #000,
+            2px  2px 0 #000;
+}
+
+.container.left-mode li {
+    padding: 2px 4px;
+    align-items: center;
 }
 
 /* ===================== */
 /* СТАТУСЫ */
 /* ===================== */
-.completed {
-    color: green;
-    font-weight: bold;
+.container.left-mode .completed {
+    color: #37dd37;
+
+    text-shadow:
+            -2px -2px 0 #000,
+            2px -2px 0 #000,
+            -2px  2px 0 #000,
+            2px  2px 0 #000;
 }
 
-.rejected {
-    color: red;
+.container.left-mode .rejected {
+    color: #ff4d4d;
     text-decoration: line-through;
-    opacity: 0.7;
+
+    text-shadow:
+            -2px -2px 0 #000,
+            2px -2px 0 #000,
+            -2px  2px 0 #000,
+            2px  2px 0 #000;
 }
 
 /* ===================== */
