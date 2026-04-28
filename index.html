@@ -7,8 +7,11 @@
   <link rel="stylesheet" href="intro.css">
   <link href="https://fonts.cdnfonts.com/css/dseg14-classic" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/amatic-sc-3" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/vcr-osd-mono" rel="stylesheet">
 </head>
 <body>
+
+<div class="bg-characters"></div>
 
 <div class="stars"></div>
 
@@ -41,6 +44,14 @@
 </div>
 
 
+<div id="resultScreen" class="result-screen">
+  <div id="resultContent"></div>
+
+  <img id="exitBtn" class="exit-btn" src="assets/Quit.png" alt="EXIT">
+</div>
+
+
+
 <!-- TODO APP -->
 <div id="appScreen" style="display:none;">
 
@@ -59,7 +70,7 @@
 
   <div class="container">
 
-    <h1>Список задач</h1>
+    <h1>TASKS</h1>
 
     <div class="input-block" id="inputBlock">
       <input type="text" id="taskInput" placeholder="Введите задачу...">
@@ -67,19 +78,21 @@
     </div>
 
     <button id="confirmBtn" class="confirm-btn">
-      Подтвердить список
+      Подтвердить ToDo List
     </button>
 
     <p id="errorMsg" class="error-msg"></p>
 
     <div class="filters" id="filters" style="display:none;">
-      <button data-filter="all">Все</button>
-      <button data-filter="active">Активные</button>
-      <button data-filter="completed">Выполненные</button>
-      <button data-filter="rejected">Отклонённые</button>
+      <button data-filter="all">All</button>
+      <button data-filter="active">Active</button>
+      <button data-filter="completed">Completed</button>
+      <button data-filter="rejected">Declined</button>
     </div>
 
     <ul id="taskList"></ul>
+
+    <img id="finishTasksBtn" class="finish-all-btn" src="assets/Report.png" alt="Завершить">
 
   </div>
 </div>

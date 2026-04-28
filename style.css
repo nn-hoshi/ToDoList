@@ -16,10 +16,8 @@ body {
     height: 74px;
 
     display: none;
-
     position: fixed;
-
-    overflow: hidden; /* 👈 важно */
+    overflow: hidden;
 }
 
 .progress-bg {
@@ -76,9 +74,8 @@ body {
     margin: 100px auto;
     padding: 20px;
 
-    background: white;
+    background: #aacaad;
     border-radius: 10px;
-
 }
 
 .container.left-mode {
@@ -92,7 +89,10 @@ body {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 
+    color: white;
 }
+
+
 
 /* ===================== */
 /* INPUT */
@@ -138,7 +138,7 @@ button + button {
 /* ОШИБКА */
 /* ===================== */
 .error-msg {
-    color: red;
+    color: #5d0000;
     font-size: 14px;
     text-align: center;
     margin-top: 8px;
@@ -174,12 +174,35 @@ li {
     padding: 10px;
 }
 
-li span {
-    color: black;
+#taskList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
+.container:not(.left-mode) #taskList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px;
+    margin-bottom: 6px;
+
+    background: #627969;
+    border-radius: 6px;
+}
+
+.container:not(.left-mode) #taskList li span {
+    color: #fff;
+
+    text-shadow: 0 0 6px #000;
+}
+
+.container.left-mode li {
+    padding: 1px;
+}
 .container.left-mode li span {
-    font-size: 23px;
+    font-size: 21px;
     letter-spacing: 1px;
 
     line-height: 1.1; /* по умолчанию ~1.4 */
@@ -192,10 +215,6 @@ li span {
             2px  2px 0 #000;
 }
 
-.container.left-mode li {
-    padding: 2px 4px;
-    align-items: center;
-}
 
 /* ===================== */
 /* СТАТУСЫ */
@@ -212,7 +231,6 @@ li span {
 
 .container.left-mode .rejected {
     color: #ff4d4d;
-    text-decoration: line-through;
 
     text-shadow:
             -2px -2px 0 #000,
@@ -224,19 +242,176 @@ li span {
 /* ===================== */
 /* РЕЗУЛЬТАТ */
 /* ===================== */
-.result-modal {
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    text-align: center;
+/* ===================== */
+/* ПЛАВНОЕ ИСЧЕЗНОВЕНИЕ */
+/* ===================== */
+.fade-out {
+    opacity: 0;
+    transform: scale(0.98);
+    transition: all 0.5s ease;
+    pointer-events: none;
 }
 
+/* ===================== */
+/* RESULT SCREEN BACKGROUND */
+/* ===================== */
+.result-screen {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 0;
+    background: #000;
+
+    pointer-events: none;
+    z-index: 9999;
+
+    transition: opacity 0.8s ease;
+}
+
+.result-screen.show {
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+/* фон победы/поражения */
+.result-screen.victory {
+    background: url("assets/victory.jpg") center/cover no-repeat;
+}
+
+.result-screen.defeat {
+    background: url("assets/defeat.png") center/cover no-repeat;
+}
+
+
+/* затемнение */
+.result-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+
+    pointer-events: none;
+}
+
+.result-screen.defeat .result-title {
+    color: #ff3b3b;
+}
+
+.result-screen.victory .result-title {
+    color: #4dc3ff;
+}
+
+.result-title {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-family: "VCR OSD Mono", monospace;
+    font-size: 150px;
+    letter-spacing: 6px;
+
+    color: white;
+    opacity: 0;
+
+    /* 👇 БЫЛО 1.2s → стало медленнее */
+    transition: top 4.2s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 4.2s ease;
+
+    transition-delay: 0.2s; /* 👈 чуть позже чем фон */
+}
+
+/* запуск */
+.result-title.show {
+    top: 40px;
+    opacity: 1;
+}
+
+.result-subtitle {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-family: "VCR OSD Mono", monospace;
+    font-size: 60px;
+    letter-spacing: 6px;
+
+    opacity: 0;
+
+    transition:
+            top 4.2s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 4.2s ease;
+
+    transition-delay: 0.6s; /* 👈 чтобы шёл после title */
+}
+
+/* состояние появления */
+.result-subtitle.show {
+    top: 170px;
+    opacity: 1;
+}
+
+.result-screen.victory .result-subtitle {
+    color: #4dc3ff;
+}
+
+.result-screen.defeat .result-subtitle {
+    color: #ff3b3b;
+}
+
+/* текст результата */
+.result-text {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+
+    color: #fff;
+    text-align: center;
+    font-size: 27px;
+
+    position: relative;
+    z-index: 2;
+}
+
+/* когда экран активен */
+.result-screen.show .result-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s; /* 👈 задержка после появления фона */
+}
+
+
+.finish-all-btn {
+    display: none;
+
+    width: 117px;
+    margin-top: 15px;
+
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.finish-all-btn:hover {
+    transform: scale(1.05);
+}
+
+.finish-all-btn:active {
+    transform: scale(0.95);
+}
+
+/* показываем только в левом режиме */
+.container.left-mode .finish-all-btn {
+    display: block;
+}
 /* ===================== */
 /* ФИНАЛ ДНЯ */
 /* ===================== */
@@ -269,15 +444,41 @@ li span {
 /* ВЫХОД */
 /* ===================== */
 .exit-btn {
-    margin-top: 15px;
-    padding: 10px 15px;
-    background: #d9534f;
-    color: white;
-    border-radius: 8px;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+
+    width: 140px;
+
     cursor: pointer;
-    width: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+
+    opacity: 0;
+    transform: translateY(20px) scale(1);
+
+    pointer-events: none;
+
+    transition:
+            opacity 0.4s ease,
+            transform 0.4s ease;
 }
 
-.exit-btn:hover {
-    background: #c9302c;
+/* появление */
+.exit-btn.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* 👇 ХОВЕР (ВАЖНО) */
+.exit-btn.show:hover {
+    transform: translateY(0) scale(1.08);
+    filter: brightness(1.2);
+}
+
+/* 👇 КЛИК (нажатие) */
+.exit-btn.show:active {
+    transform: translateY(0) scale(0.92);
+    filter: brightness(0.9);
 }

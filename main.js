@@ -1,6 +1,4 @@
-// =====================
 // STATE
-// =====================
 let state = {
   tasks: [],
   filter: 'all',
@@ -8,9 +6,7 @@ let state = {
   finished: false,
 };
 
-// =====================
 // PURE FUNCTIONS
-// =====================
 
 const addTask = (tasks, text) => [
   ...tasks,
@@ -63,92 +59,18 @@ const getStats = (tasks) => {
 const updateProgress = () => {
   const bar = document.getElementById('progressBar');
   const { percent } = getStats(state.tasks);
-  bar.style.width = percent + '%';
+  const maxWidth = 760; // подгони под свою картинку
+  bar.style.width = (maxWidth * percent) / 100 + 'px';
 };
 
 const updateStats = () => {
   const box = document.getElementById('statsBox');
   const { total, completed, percent } = getStats(state.tasks);
-
-  box.innerHTML = `Выполнено: ${completed} / ${total} (${percent}%)`;
 };
 
-// =====================
-// CHECK IF FINISHED
-// =====================
 
-const checkFinished = () => {
-  const allDone = state.tasks.every(
-    (t) => t.status === 'completed' || t.status === 'rejected',
-  );
-
-  if (allDone && state.tasks.length > 0 && !state.finished) {
-    state.finished = true;
-
-    // ❌ УБИРАЕМ ВЕСЬ БЛОК УПРАВЛЕНИЯ ЗАДАЧАМИ
-    document.querySelector('.container').style.display = 'none';
-
-    // ❌ УБИРАЕМ ПРОГРЕСС И СТАТИСТИКУ
-    document.querySelector('.progress-container').style.display = 'none';
-    document.querySelector('.stats').style.display = 'none';
-
-    showResult();
-  }
-};
-
-// =====================
-// RESULT WINDOW
-// =====================
-
-const showResult = () => {
-  const modal = document.getElementById('resultModal');
-  const { total, completed, percent } = getStats(state.tasks);
-
-  modal.style.display = 'block';
-
-  modal.innerHTML = `
-        Задачи завершены!<br><br>
-        Выполнено: ${completed} / ${total}<br>
-        Прогресс: ${percent}%<br><br>
-
-        <button id="finishDayBtn" class="finish-btn">
-            Закончить день
-        </button>
-    `;
-
-  document.getElementById('finishDayBtn').addEventListener('click', finishDay);
-};
-
-const finishDay = () => {
-  document.querySelector('.container').style.display = 'none';
-  document.querySelector('.progress-container').style.display = 'none';
-  document.querySelector('.stats').style.display = 'none';
-
-  const modal = document.getElementById('resultModal');
-
-  modal.innerHTML = `
-      <div class="finish-message">
-          День завершён. Хорошая работа!
-      </div>
-
-      <div class="finish-actions">
-          <button id="exitBtn" class="exit-btn">
-              Выйти
-          </button>
-      </div>
-  `;
-
-  document.getElementById('exitBtn').addEventListener('click', exitApp);
-};
-
-const exitApp = () => {
-  // пробуем закрыть вкладку (сработает не всегда)
-  window.close();
-};
-
-// =====================
 // RENDER
-// =====================
+
 const render = () => {
   const list = document.getElementById('taskList');
   list.innerHTML = '';
@@ -186,8 +108,26 @@ const render = () => {
     updateProgress();
   }
   updateStats();
-  checkFinished();
 };
+
+document.getElementById('finishTasksBtn').addEventListener('click', () => {
+  if (state.tasks.length === 0) return;
+
+  state.finished = true;
+
+  const { percent } = getStats(state.tasks);
+  const isVictory = percent >= 50;
+
+  document.querySelector('.container').classList.add('fade-out');
+  document.querySelector('.progress-container').classList.add('fade-out');
+
+  setTimeout(() => {
+    document.querySelector('.container').style.display = 'none';
+    document.querySelector('.progress-container').style.display = 'none';
+
+    showEndScreen(isVictory);
+  }, 500);
+});
 
 // =====================
 // ACTIONS
@@ -269,5 +209,84 @@ const bindFilterEvents = () => {
   });
 };
 
+const victorySound = new Audio(
+  'https://static.wikia.nocookie.net/among-us-wiki/images/5/51/Crewmate_victory_music.ogg/revision/latest?cb=20200914131738',
+);
+victorySound.volume = 0.2;
+
+const defeatSound = new Audio(
+  'https://static.wikia.nocookie.net/among-us-wiki/images/d/d7/Victory_impostor.wav/revision/latest?cb=20250329225138',
+);
+
+defeatSound.volume = 0.2;
+
+const exitBtn = document.getElementById('exitBtn');
+
+const exitApp = () => {
+  window.close();
+};
+
+const showEndScreen = (isVictory) => {
+  const screen = document.getElementById('resultScreen');
+  const content = document.getElementById('resultContent');
+
+  const { total, completed, percent } = getStats(state.tasks);
+
+  screen.classList.add('show');
+  screen.classList.remove('victory', 'defeat');
+
+  content.innerHTML = '';
+
+  setTimeout(() => {
+    const type = isVictory ? 'victory' : 'defeat';
+    screen.classList.add(type);
+
+    const title = document.createElement('div');
+    title.className = 'result-title';
+    title.textContent = isVictory ? 'Victory' : 'Defeat';
+
+    const subtitle = document.createElement('div');
+    subtitle.className = 'result-subtitle';
+
+    subtitle.textContent = isVictory ? 'Good Work!' : 'Lazy Imposter WINS';
+
+    const text = document.createElement('div');
+    text.className = 'result-text';
+
+    text.innerHTML = `
+      Выполнено: ${completed} / ${total}<br>
+      Прогресс: ${percent}%
+    `;
+
+    content.appendChild(title);
+    content.appendChild(subtitle);
+    content.appendChild(text);
+
+
+    requestAnimationFrame(() => {
+      title.classList.add('show');
+      subtitle.classList.add('show');
+    });
+
+    // SOUND
+    if (isVictory) {
+      victorySound.currentTime = 0;
+      victorySound.play().catch(() => {});
+    } else {
+      defeatSound.currentTime = 0;
+      defeatSound.play().catch(() => {});
+    }
+  }, 1500);
+
+  // 🔥 EXIT BUTTON CONTROL (ВАЖНО: НЕ пересоздаём события!)
+  setTimeout(() => {
+    exitBtn.classList.add('show');
+  }, 3000);
+
+  // назначаем ОДИН раз
+  exitBtn.onclick = exitApp;
+};
+
 // INIT
 render();
+bindFilterEvents();

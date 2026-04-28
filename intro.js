@@ -14,7 +14,6 @@ let timeStart, timeEnd;
 // =====================
 goIntroBtn.addEventListener('click', () => {
   titleScreen.style.display = 'none';
-
   cardOverlay.classList.add('active');
 });
 
@@ -127,6 +126,63 @@ function evaluateSwipe(x) {
 
   return 'valid';
 }
+
+const container = document.querySelector('.bg-characters');
+
+let bgActive = true;
+
+const sprites = [
+  'assets/crewmates/black.png',
+  'assets/crewmates/blue.png',
+  'assets/crewmates/green.png',
+  'assets/crewmates/pink.png',
+  'assets/crewmates/red.png',
+  'assets/crewmates/yellow.png',
+  'assets/crewmates/white.png',
+  'assets/crewmates/purple.png',
+  'assets/crewmates/orange.png',
+  'assets/crewmates/cyan.png',
+];
+
+const SIZE = 120;
+
+function createCharacter(sprite) {
+  const el = document.createElement('div');
+  el.className = 'bg-character';
+
+  el.style.backgroundImage = `url(${sprite})`;
+  el.style.width = SIZE + 'px';
+  el.style.height = SIZE + 'px';
+
+  container.appendChild(el);
+
+  let x = Math.random() * window.innerWidth;
+  let y = Math.random() * window.innerHeight;
+
+  let dx = (Math.random() - 0.5) * 1.2;
+  let dy = (Math.random() - 0.5) * 1.2;
+
+  let angle = Math.random() * 360;
+  let rotSpeed = (Math.random() - 0.5) * 1;
+
+  function animate() {
+
+    x += dx;
+    y += dy;
+    angle += rotSpeed;
+
+    if (x <= 0 || x >= window.innerWidth - SIZE) dx *= -1;
+    if (y <= 0 || y >= window.innerHeight - SIZE) dy *= -1;
+
+    el.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+sprites.forEach((sprite) => createCharacter(sprite));
 
 // =====================
 // STATUS
